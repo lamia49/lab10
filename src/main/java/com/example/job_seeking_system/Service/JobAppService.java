@@ -16,12 +16,14 @@ public class JobAppService {
     public final RepositryJobApp repositryJobApp;
     public final RepositryJobPost repositryJobPost;
     public final RepositryUser repositryUser;
-    public Boolean add(int idUser,int idJopPost,JopApplication jopApplication){
-     if(repositryUser.findById(idUser)!=null&&repositryJobPost.findById(idJopPost)!=null){
-         repositryJobApp.save(jopApplication);
-         return true;
-     }
-        return false;
+  public String add(JopApplication jopApplication){
+
+      if(repositryUser.existsById(jopApplication.getUserId())){
+         if(repositryJobApp.existsById(jopApplication.getJobPostId())){
+             repositryJobApp.save(jopApplication);
+             return "found";
+         }return " post id not found";
+      }return  "user id not found";
     }
     public List get(){
         return repositryJobApp.findAll();
