@@ -17,13 +17,16 @@ public class jobAppController {
 
 
     @PostMapping("/add/{userId}/{idJobPost}")
-    public ResponseEntity add(@PathVariable int userId,@PathVariable int idJobPost, @RequestBody @Valid JopApplication jopApplication , Errors error){
-        if(error.hasErrors()){
-            String massege= error.getFieldError().getDefaultMessage();
-            return ResponseEntity.status(400).body(massege);
-        }
-        jobAppService.add(userId,idJobPost,jopApplication);
-        return ResponseEntity.status(200).body("added");
+    public ResponseEntity add( @RequestBody @Valid JopApplication jopApplication){
+        String found=jobAppService.add(jopApplication);
+      if(found.equalsIgnoreCase("post id not found")){
+          return ResponseEntity.status(400).body("post id not found");
+      }else if(found.equalsIgnoreCase("user id not found")){
+          return ResponseEntity.status(400).body("user id not found");
+      }
+      jobAppService.repositryJobApp.save(jopApplication);
+      return ResponseEntity.status(200).body("added");
+
     }
 
     @GetMapping("/get")
